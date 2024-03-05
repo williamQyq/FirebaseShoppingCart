@@ -2,17 +2,33 @@ import PropTypes from "prop-types";
 import { useState } from "react";
 import Product from "./Product";
 
-export default function ProductsList({ products, onAddProductToBuy }) {
+export default function ProductsList({
+  products,
+  onAddProductToBuy,
+  onDeleteProduct,
+  onUpdateProduct,
+}) {
+  const productsPerPage = 20; //products per page
   const [activePage, setActivePage] = useState(1);
+  const [editMode, setEditMode] = useState(false);
 
+  //toggle edit mode
+  const onToggleEditMode = () => {
+    setEditMode(!editMode);
+  };
+
+  //render pagination
   const renderPagination = () => {
-    const pages = Math.ceil(products.length);
+    const pages = Math.ceil(products.length / productsPerPage);
+
     const onClickNext = () => {
       setActivePage(activePage + 1);
     };
+
     const onClickPrevious = () => {
       setActivePage(activePage - 1);
     };
+
     return (
       <nav aria-label="...">
         <ul className="pagination">
@@ -45,19 +61,44 @@ export default function ProductsList({ products, onAddProductToBuy }) {
     );
   };
 
+  //render products
+  const renderProducts = () => {
+    const start = (activePage - 1) * productsPerPage;
+    const end = start + productsPerPage;
+    return products
+      .slice(start, end)
+      .map((p, i) => (
+        <Product
+          key={i}
+          product={{ ...p }}
+          editMode={editMode}
+          onAddProductToBuy={onAddProductToBuy}
+          onDeleteProduct={onDeleteProduct}
+          onUpdateProduct={onUpdateProduct}
+        ></Product>
+      ));
+  };
+
   return (
     <>
-      <h2>Products</h2>
-      <div className="products row">
-        {products.map((p, i) => (
-          <Product
-            key={i}
-            product={p}
-            onAddProductToBuy={onAddProductToBuy}
-          ></Product>
-        ))}
+      <div className="row">
+        <div className="col-8">
+          <h2>Products</h2>
+        </div>
+        <div className="col-4">
+          {editMode ? (
+            <button className="btn btn-primary" onClick={onToggleEditMode}>
+              done
+            </button>
+          ) : (
+            <button className="btn btn-primary" onClick={onToggleEditMode}>
+              edit
+            </button>
+          )}
+        </div>
       </div>
-      {renderPagination()}
+      <div className="products row mb-2">{renderProducts()}</div>
+      <div className="pagination row mb-2">{renderPagination()}</div>
     </>
   );
 }
@@ -65,4 +106,6 @@ export default function ProductsList({ products, onAddProductToBuy }) {
 ProductsList.propTypes = {
   products: PropTypes.array.isRequired,
   onAddProductToBuy: PropTypes.func.isRequired,
+  onDeleteProduct: PropTypes.func.isRequired,
+  onUpdateProduct: PropTypes.func.isRequired,
 };

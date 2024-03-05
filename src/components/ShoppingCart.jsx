@@ -1,12 +1,20 @@
 import PropTypes from "prop-types";
 
-export default function ShoppingCart({ productsToBuy }) {
+export default function ShoppingCart({
+  productsToBuy,
+  onRemoveProductFromCart,
+}) {
   const renderProductToBuy = (product, i) => {
     return (
       <li key={i}>
         <span>{product.name} </span>
         <span>${product.price}</span>
-        <button className="btn btn-outline-danger btn-sm">Remove</button>
+        <button
+          className="btn btn-outline-danger btn-sm"
+          onClick={() => onRemoveProductFromCart(i)}
+        >
+          Remove
+        </button>
       </li>
     );
   };
@@ -22,4 +30,5 @@ export default function ShoppingCart({ productsToBuy }) {
 
 ShoppingCart.propTypes = {
   productsToBuy: PropTypes.array.isRequired,
+  onRemoveProductFromCart: PropTypes.func.isRequired,
 };

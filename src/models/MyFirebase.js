@@ -1,5 +1,6 @@
 // Import the functions you need from the SDKs you need
 import { initializeApp } from "firebase/app";
+import { getFirestore } from "firebase/firestore";
 // import { getAnalytics } from "firebase/analytics";
 
 function MyFireBase() {
@@ -10,21 +11,22 @@ function MyFireBase() {
     // Your web app's Firebase configuration
     // For Firebase JS SDK v7.20.0 and later, measurementId is optional
     const firebaseConfig = {
-        apiKey: "AIzaSyCK6mkhPREOTt2mVtOsTDZ97PSegfKZO30",
-        authDomain: "myfirebase-352d3.firebaseapp.com",
-        projectId: "myfirebase-352d3",
-        storageBucket: "myfirebase-352d3.appspot.com",
-        messagingSenderId: "2371914049",
-        appId: "1:2371914049:web:8381c8227eac73b2b739c0",
-        measurementId: "G-8Y7856DZ2X"
+        apiKey: "AIzaSyDFFf0DruZHoaeBw1ol1gaDYRVWZEZSlkE",
+        authDomain: "shoppingcart-8f8dc.firebaseapp.com",
+        projectId: "shoppingcart-8f8dc",
+        storageBucket: "shoppingcart-8f8dc.appspot.com",
+        messagingSenderId: "187419939200",
+        appId: "1:187419939200:web:09492eefb14d407e797165"
     };
+
     // Initialize Firebase
     const app = initializeApp(firebaseConfig);
     // const analytics = getAnalytics(app);
+    const firestore = getFirestore(app);
 
-    return app;
+    return firestore;
 }
 
-const myFirebase = MyFireBase();
+const myFirestore = MyFireBase();
 
-export default myFirebase;
+export default myFirestore;
