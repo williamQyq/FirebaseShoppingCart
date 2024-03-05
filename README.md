@@ -9,6 +9,8 @@ This project implements a shopping cart application using React functional compo
 - Delete products
 - Create new products
 
+`deployed URL`: https://shoppingcart-8f8dc.web.app/  
+`Youtube`: https://youtu.be/nUINQkaao5A
 
 ## Created Process
 1. Initialized Vite React project.
