@@ -15,28 +15,27 @@ export default function App() {
   const productsService = new ProductsService();
 
   useEffect(() => {
-    //product service
-    onGetProducts();
+    //refresh products
+    refreshProducts();
 
     return () => {};
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
-  const onGetProducts = () => {
-    //get products from firestore and sort by created time
-    productsService.getProducts().then((products) => {
-      setProducts(products);
-    });
+  const refreshProducts = async () => {
+    const products = await productsService.getProducts();
+    setProducts(products);
   };
+
   //add product to firestore
-  const onAddProduct = (product) => {
-    productsService.addProduct(product).then(() => {
-      setProducts([]);
-      onGetProducts();
-    });
+  const onAddProduct = async (product) => {
+    console.log("onAddProduct: ", product);
+    await productsService.addProduct(product);
+    await refreshProducts();
   };
 
   const onAddProductToBuy = (product) => {
+    console.log("onAddProductToBuy: ", product);
     setProductsToBuy([...productsToBuy, product]);
   };
 
@@ -46,27 +45,26 @@ export default function App() {
       setProductsToBuy([...productsToBuy]);
     }
   };
+
   //remove product from firestore
-  const onDeleteProduct = (productId) => {
-    productsService.removeProduct(productId).then(() => {
-      setProducts([]);
-      onGetProducts();
-    });
+  const onDeleteProduct = async (productId) => {
+    console.log("onDeleteProduct: ", productId);
+    await productsService.removeProduct(productId);
+    await refreshProducts();
   };
+
   //update product in firestore
-  const onUpdateProduct = (productId, product) => {
-    productsService.updateProduct(productId, product).then(() => {
-      onGetProducts();
-    });
+  const onUpdateProduct = async (productId, product) => {
+    console.log("onUpdateProduct: ", productId, product);
+    await productsService.updateProduct(productId, product);
+    await refreshProducts();
   };
-  const onDeleteAllProducts = () => {
-    const deletePromises = products.map((product) =>
-      productsService.removeProduct(product.id)
-    );
-    //update products after delete all products
-    Promise.all(deletePromises).then(() => {
-      setProducts([]);
-    });
+
+  const onDeleteAllProducts = async () => {
+    for (const product of products) {
+      await productsService.removeProduct(product.id);
+    }
+    await refreshProducts();
   };
 
   return (

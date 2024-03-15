@@ -67,9 +67,9 @@ export default function ProductsList({
     const end = start + productsPerPage;
     return products
       .slice(start, end)
-      .map((p, i) => (
+      .map((p) => (
         <Product
-          key={i}
+          key={p.id}
           product={{ ...p }}
           editMode={editMode}
           onAddProductToBuy={onAddProductToBuy}

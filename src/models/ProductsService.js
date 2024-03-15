@@ -15,7 +15,9 @@ export class ProductsService {
         try {
             const querySnapshot = await getDocs(this.productsRef);
             products = querySnapshot.docs.map((doc) => doc.data());
-            products.sort((a, b) => b.createdTime - a.createdTime);
+            console.log("getProducts() res: ", products);
+            //sort by createdTime
+            products.sort((a, b) => b.createdTime.toDate().getTime() - a.createdTime.toDate().getTime());
         } catch (error) {
             console.error("Error getting products: ", error);
             alert("Error getting products: " + error);
@@ -33,9 +35,10 @@ export class ProductsService {
             return;
         }
         try {
-            await addDoc(this.productsRef, product);
-            console.log("Product added: ", product.toString());
+            const res = await addDoc(this.productsRef, product);
+            console.log("addProduct() res: ", res.id);
         } catch (error) {
+            console.error("Error adding product: ", error);
             alert("Error adding product: " + error);
         }
     }
@@ -49,6 +52,7 @@ export class ProductsService {
             await deleteDoc(toBeDeletedDoc);
             console.log("Product removed: ", productId);
         } catch (error) {
+            console.error("Error removing product: ", error);
             alert("Error removing product: " + error);
         }
     }
@@ -63,6 +67,7 @@ export class ProductsService {
             await updateDoc(toBeUpdatedDoc, product);
             console.log("Product updated: ", product.toString());
         } catch (error) {
+            console.error("Error updating product: ", error);
             alert("Error updating product: " + error);
         }
     }

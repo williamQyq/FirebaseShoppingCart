@@ -8,34 +8,44 @@ export default function CreateProductForm({
 }) {
   const nameRef = React.createRef();
   const priceRef = React.createRef();
+  const formRef = React.createRef(null);
 
-  const onAddProductHelper = (e) => {
+  const getFormData = () => {
+    const formData = new FormData(formRef.current);
+    formRef.current.reset(); //reset form after return
+    return Object.fromEntries(formData); //convert formData to object
+  };
+
+  const handleAddProductOnClick = (e) => {
     e.preventDefault();
+    const formData = getFormData();
 
     //add product to db
     onAddProduct(
       new Product({
-        name: nameRef.current.value,
-        price: +priceRef.current.value,
+        name: formData.name,
+        price: +formData.price,
         image: "https://via.placeholder.com/150",
       })
     );
   };
 
-  const onAddProductHelperx20 = (e) => {
+  const handleAddMultiProductOnClick = (e) => {
     e.preventDefault();
+    const formData = getFormData();
+
     for (let i = 0; i < 20; i++) {
       onAddProduct(
         new Product({
-          name: nameRef.current.value + i,
-          price: +priceRef.current.value + i,
+          name: formData.name + i,
+          price: +formData.price,
           image: "https://via.placeholder.com/150",
         })
       );
     }
   };
 
-  const onRemoveProductHelper = (e) => {
+  const handleRemoveProduct = (e) => {
     e.preventDefault();
     onRemoveAllProducts();
   };
@@ -43,38 +53,41 @@ export default function CreateProductForm({
   return (
     <div>
       <h2>Create Product</h2>
-      <form>
+      <form ref={formRef} action="/" onSubmit={handleAddProductOnClick}>
         <div className="form-group">
-          <label htmlFor="name">Name</label>
-          <input type="text" className="form-control" id="name" ref={nameRef} />
+          <label className="form-label">Name</label>
+          <input
+            type="text"
+            className="form-control"
+            name="name"
+            required
+            ref={nameRef}
+          />
         </div>
         <div className="form-group">
-          <label htmlFor="price">Price</label>
+          <label className="form-label">Price</label>
           <input
             type="number"
             className="form-control"
-            id="price"
+            name="price"
+            required
             ref={priceRef}
           />
         </div>
         <div className="form-group mb-2">
-          <label htmlFor="image">Image</label>
-          <input type="text" className="form-control" id="image" />
+          <label className="form-label">Image</label>
+          <input type="text" className="form-control" name="image" required />
         </div>
-        <button
-          type="submit"
-          className="btn btn-primary mr-3"
-          onClick={onAddProductHelper}
-        >
+        <button type="submit" className="btn btn-primary mr-3">
           Add Product
         </button>
         <button
           className="btn btn-secondary mr-3"
-          onClick={onAddProductHelperx20}
+          onClick={handleAddMultiProductOnClick}
         >
           Add Product x20
         </button>
-        <button className="btn btn-danger mr-3" onClick={onRemoveProductHelper}>
+        <button className="btn btn-danger mr-3" onClick={handleRemoveProduct}>
           Remove All Products
         </button>
       </form>
