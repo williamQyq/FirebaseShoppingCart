@@ -14,10 +14,10 @@ export class ProductsService {
         let products = [];
         try {
             const querySnapshot = await getDocs(this.productsRef);
-            products = querySnapshot.docs.map((doc) => doc.data());
-            console.log("getProducts() res: ", products);
+            products = querySnapshot.docs.map((doc) => ({ ...doc.data(), id: doc.id }));
             //sort by createdTime
-            products.sort((a, b) => b.createdTime.toDate().getTime() - a.createdTime.toDate().getTime());
+            products.sort((a, b) => b.createdTime - a.createdTime);
+            console.log("getProducts() res: ", products);
         } catch (error) {
             console.error("Error getting products: ", error);
             alert("Error getting products: " + error);
@@ -35,6 +35,7 @@ export class ProductsService {
             return;
         }
         try {
+            console.log("addProduct() product: ", product.toString());
             const res = await addDoc(this.productsRef, product);
             console.log("addProduct() res: ", res.id);
         } catch (error) {
@@ -74,12 +75,12 @@ export class ProductsService {
 }
 
 export class Product {
-    constructor({ id, name, price, image, createdTime } = {}) {
+    constructor({ id, name, price, image, createdTime = Timestamp.now().toMillis() } = {}) {
         this.id = id;
         this.name = name;
         this.price = price;
         this.image = image;
-        this.createdTime = createdTime || Timestamp.now();
+        this.createdTime = createdTime;
     }
     toString() {
         return `${this.name} - $${this.price} - ${this.createdTime}`;
@@ -92,6 +93,7 @@ const productConverter = {
             name: product.name,
             price: product.price,
             image: product.image,
+            createdTime: product.createdTime
         };
     },
     fromFirestore: function (snapshot, options) {
@@ -100,7 +102,8 @@ const productConverter = {
             id: snapshot.id,
             name: data.name,
             price: data.price,
-            image: data.image
+            image: data.image,
+            createdTime: data.createdTime
         });
     },
 };
