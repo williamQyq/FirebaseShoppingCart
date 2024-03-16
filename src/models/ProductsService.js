@@ -74,6 +74,7 @@ export class ProductsService {
     }
 }
 
+// I think we should not use class in this homework and it is easy to convert into John's function style
 export class Product {
     constructor({ id, name, price, image, createdTime = Timestamp.now().toMillis() } = {}) {
         this.id = id;
