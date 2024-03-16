@@ -31,7 +31,16 @@ export default function App() {
   const onAddProduct = async (product) => {
     console.log("onAddProduct: ", product);
     await productsService.addProduct(product);
-    await refreshProducts();
+
+    // I think you do not need to refresh it since useEffect will do it for you
+    //await refreshProducts();
+    // And you need to change state to make it rendering
+    setProducts([...products, {
+      id: product.id,
+      name: product.name,
+      price: product.price,
+      image: product.image,
+    }])
   };
 
   const onAddProductToBuy = (product) => {
@@ -50,13 +59,20 @@ export default function App() {
   const onDeleteProduct = async (productId) => {
     console.log("onDeleteProduct: ", productId);
     await productsService.removeProduct(productId);
-    await refreshProducts();
+    
+    // Same issue here, and I think this is why your web stucks some frames when you delete a product
+    //await refreshProducts();
+
+    // Try to change state to make it re-render rather than re-read the database
+    setProducts(products.filter((p) => p.id !== productId));
   };
 
   //update product in firestore
   const onUpdateProduct = async (productId, product) => {
     console.log("onUpdateProduct: ", productId, product);
     await productsService.updateProduct(productId, product);
+
+    // Same here
     await refreshProducts();
   };
 
