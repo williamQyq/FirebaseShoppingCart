@@ -8,6 +8,7 @@ This project implements a shopping cart application using React functional compo
 - Update existing products
 - Delete products
 - Create new products
+- `Sort products on the created time`
 
 `deployed URL`: https://shoppingcart-8f8dc.web.app/  
 `Youtube`: https://youtu.be/nUINQkaao5A
